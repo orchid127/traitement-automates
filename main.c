@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include "Automate.h"
-#include "stdlib.h"
 
 int main()
 {

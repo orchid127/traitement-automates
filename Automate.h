@@ -33,4 +33,5 @@ int est_un_automate_complet(automate test);
 int completion(automate *test);
 int est_standard(automate test);
 automate determiniser(automate *AFN);
+
 #endif //AUTOMATEFINI_AUTOMATE_H

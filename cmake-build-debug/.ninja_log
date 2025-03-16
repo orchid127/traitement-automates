@@ -1,0 +1,5 @@
+# ninja log v5
+4	234	7636958831990627	CMakeFiles/traitement_automates.dir/main.c.obj	1785eb2b79685111
+3	362	7638407085116715	build.ninja	3e0fb28643d1279e
+1	1530	7636956191889684	CMakeFiles/traitement_automates.dir/Automate.c.obj	c091893128558a2a
+236	561	7636958835222542	traitement_automates.exe	7e9515eba8e9a581
