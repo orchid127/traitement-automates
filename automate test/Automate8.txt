@@ -1,0 +1,7 @@
+8 /* numéro automate*/
+1 /* nbre symbole */
+2 /* nb états*/
+1 1 /*nb états initiaux et numéro */
+1 0 /* nb états terminaux et numéro */
+1a0 /*transition*/
+0a0

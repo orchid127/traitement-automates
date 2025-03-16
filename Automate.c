@@ -201,7 +201,6 @@ void affichage_automate(automate test) {
 }
 
 
-
 int est_un_automate_deterministe(automate test)
 {
     int nondet = 0;
@@ -277,6 +276,7 @@ int est_un_automate_complet(automate test)
     }
     return 1;
 }
+
 int completion(automate *test)
 {
     char alphabet[] = "abcdefghijklmnopqrstuvwxyz";
