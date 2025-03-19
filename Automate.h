@@ -30,8 +30,7 @@ void Stockagedonneesautomate(automate *,int);
 void affichage_automate(automate test);
 int est_un_automate_deterministe(automate test);
 int est_un_automate_complet(automate test);
-int completion(automate *test);
+automate completion(automate test);
 int est_standard(automate test);
-automate determiniser(automate *AFN);
-
+automate standardisation(automate test);
 #endif //AUTOMATEFINI_AUTOMATE_H
