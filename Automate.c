@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "Automate.h"
 #include "string.h"
-void Stockagedonneesautomate(automate *test, int num_automate) {
+void Stockage_donnees_automate(automate *test, int num_automate) {
 
     char filename[100];
     /* Permet de créer le chemin du fichier contenant l'automate désirer en fonction du numéro choisis*/
@@ -116,10 +116,19 @@ void affichage_automate(automate test)
             break;
         }
     }
+    int premier_lettre=0;
     /*Affichage de l'alphabet de l'automate*/
     for (int i = 0; i < test.nb_symbole; i++)
     {
-        printf("%7c", alphabet[i]);
+        if(premier_lettre == 0)
+        {
+            printf("%10c", alphabet[i]);
+        premier_lettre =1;
+        }
+        else
+        {
+            printf("%5c", alphabet[i]);
+        }
     }
     /*Affichage colonne epsilon si il y a des transitions epsilon dans l'automate sinon non*/
     if (epsi_trouv == 1)
@@ -366,13 +375,14 @@ automate completion(automate test)
 int est_standard(automate test)
 {
     int non_std = 0;
+    /*Vérifaction que le nombre d'états initiaux n'est pas supérieur à 1*/
     if (test.nb_etat_initiaux > 1)
     {
         non_std = 1;
         printf("L'automate n'est pas standard car il possede plusieurs etats initiaux : %d \n", test.nb_etat_initiaux);
 
     }
-
+    /*Vérifaction qu'il n'existe pas de transition depuis d'autre état ver l'état initial*/
     for (int i = 0; i < test.nb_transition; i++)
     {
 

@@ -10,7 +10,7 @@ int main()
     automate AFDC;
     automate SFA;
 
-    Stockagedonneesautomate(&AF,choix_automate);
+    Stockage_donnees_automate(&AF,choix_automate);
     affichage_automate(AF);
 
     if (est_standard(AF)==0)
