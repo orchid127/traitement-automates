@@ -119,11 +119,11 @@ void affichage_automate(automate test)
         if(premier_lettre == 0)
         {
             printf("%10c", alphabet[i]);
-        premier_lettre =1;
+            premier_lettre =1;
         }
         else
         {
-            printf("%5c", alphabet[i]);
+            printf("%6c", alphabet[i]);
         }
     }
 
@@ -183,41 +183,69 @@ void affichage_automate(automate test)
             printf("   %2d", i);
         }
 
-        /*Affichage des transitions*/
+        /* Affichage des transitions */
         for (int l = 0; l < test.nb_symbole; l++)
         {
             int trans_trouv = 0;
-
+            int first = 1;
             for (int k = 0; k < test.nb_transition; k++)
             {
-                if (test.transition[k].etat_depart == i && strcmp(test.transition[k].alphabet, (char[]) {alphabet[l], '\0'}) == 0)
-                {
-                    printf("%5d", test.transition[k].etat_arrivee);
+                if (test.transition[k].etat_depart == i && strcmp(test.transition[k].alphabet, (char[]) {alphabet[l], '\0'}) == 0) {
+                    if (first == 1 )
+                    {
+                        printf("    ");
+                    }
+                    if (first ==0)
+                    {
+                        printf(",");
+                    }
+
+                    printf("%d", test.transition[k].etat_arrivee);
                     trans_trouv = 1;
+                    first = 0;
                 }
             }
-            /* Si une transition n'est pas trouvé on affiche - */
+
             if (trans_trouv == 0)
             {
-                printf("    -");
+                printf("   -");
+            }
+
+
+            if (l != test.nb_symbole - 1)
+            {
+                printf("");
             }
         }
 
-        /* Affichage des transition avec epsilon */
-        if (epsi_trouv)
-        {
+        /* Affichage des transitions avec epsilon */
+        if (epsi_trouv) {
             int epsi = 0;
+            int first_epsi = 1;
+
             for (int k = 0; k < test.nb_transition; k++)
             {
-                if (test.transition[k].etat_depart == i && (strcmp(test.transition[k].alphabet, "ε") == 0 ))
+
+                if (test.transition[k].etat_depart == i && strcmp(test.transition[k].alphabet, "ε") == 0)
                 {
-                    printf("%5d", test.transition[k].etat_arrivee);
+                    if (first_epsi ==1)
+                    {
+                        printf("    ");
+                    }
+
+                    if (first_epsi ==0)
+                    {
+                        printf(",");
+                    }
+
+                    printf("%d", test.transition[k].etat_arrivee);
                     epsi = 1;
+                    first_epsi = 0;
                 }
             }
 
-            if (epsi == 0)
-            {
+
+            if (epsi == 0) {
                 printf("    -");
             }
         }
