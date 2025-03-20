@@ -7,7 +7,8 @@
 
 
 
-typedef struct {
+typedef struct
+{
     int etat_depart;
     char alphabet[50];
     int etat_arrivee;

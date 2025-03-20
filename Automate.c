@@ -10,6 +10,7 @@ void Stockage_donnees_automate(automate *test, int num_automate) {
     /* Permet de créer le chemin du fichier contenant l'automate désirer en fonction du numéro choisis*/
     snprintf(filename, sizeof(filename), "C:\\Users\\amabl\\CLionProjects\\Automatefini\\automate test\\Automate%d.txt", num_automate);
 
+    /*Ouverture du fichier .txt choisis*/
     FILE *file = fopen(filename, "r");
 
     /*Récupère sur la première ligne le nombre symbole utilisé*/
@@ -24,7 +25,8 @@ void Stockage_donnees_automate(automate *test, int num_automate) {
     fscanf(file, "%d", &test->nb_etat_initiaux);
     printf("Le nombre d'etat(s) initiaux est : %d\n", test->nb_etat_initiaux);
     printf("Les etats initiaux sont : ");
-    for (int i = 0; i < test->nb_etat_initiaux; i++) {
+    for (int i = 0; i < test->nb_etat_initiaux; i++)
+    {
         fscanf(file, "%d", &test->etats_initiaux[i]);
         printf("%d ", test->etats_initiaux[i]);
     }
@@ -46,40 +48,41 @@ void Stockage_donnees_automate(automate *test, int num_automate) {
     fscanf(file, "%d", &test->nb_transition);
     printf("\nLe nombre de transiton est %d\n", test->nb_transition);
 
-    char buffer[100];
-    int index =0;
-    while (fgets(buffer, sizeof(buffer), file) != NULL)
+    char Ligne_lue[100];
+    int index = 0;
+
+    while (fgets(Ligne_lue, sizeof(Ligne_lue), file) != NULL && index < test->nb_transition)
     {
-        if (index >= test->nb_transition)
-        {
-            break;
-        }
+
         /* Si ligne vide on va à la prochaine**/
-        if (buffer[0] == '\n' || buffer[0] == '\r') continue;
+        if (Ligne_lue[0] == '\n' || Ligne_lue[0] == '\r')
+        {
+            continue;
+        }
 
 
         int etat_depart, etat_arrivee;
         char symbole[50];
 
-        /* Analyse de la ligne récupére pour extraire les information et verification d'extraire 3 données*/
-        if (sscanf(buffer, "%d %s %d", &etat_depart, symbole, &etat_arrivee) == 3)
+        /* Analyse de la ligne récupére pour extraire les informations*/
+        sscanf(Ligne_lue, "%d%s%d", &etat_depart, symbole, &etat_arrivee);
+
+        /*Stockage des données*/
+        test->transition[index].etat_depart = etat_depart;
+        test->transition[index].etat_arrivee = etat_arrivee;
+
+        /*détection de ε si trouvé alors on le copie dans l'alphabet sinon on copie simplement le symbole*/
+        if (strcmp(symbole, "ε") == 0 )
         {
-            /*Stockage des données*/
-            test->transition[index].etat_depart = etat_depart;
-            test->transition[index].etat_arrivee = etat_arrivee;
-
-            /*détection de ε si trouvé alors on le copie dans l'alphabet sinon on copie simplement le symbole*/
-            if (strcmp(symbole, "ε") == 0 )
-            {
-                strcpy(test->transition[index].alphabet, "ε");
-            }
-            else
-            {
-                strcpy(test->transition[index].alphabet, symbole);
-            }
-
-            index++;
+            strcpy(test->transition[index].alphabet, "ε");
         }
+        else
+        {
+            strcpy(test->transition[index].alphabet, symbole);
+        }
+
+        index++;
+
 
     }
 
@@ -107,16 +110,9 @@ void affichage_automate(automate test)
     int init, term;
     int epsi_trouv = 0;
 
-    /* Détection de transition avec epsilon */
-    for (int i = 0; i < test.nb_transition; i++)
-    {
-        if (strcmp(test.transition[i].alphabet, "ε") == 0 )
-        {
-            epsi_trouv = 1;
-            break;
-        }
-    }
-    int premier_lettre=0;
+
+    int premier_lettre = 0;
+
     /*Affichage de l'alphabet de l'automate*/
     for (int i = 0; i < test.nb_symbole; i++)
     {
@@ -130,6 +126,17 @@ void affichage_automate(automate test)
             printf("%5c", alphabet[i]);
         }
     }
+
+    /* Détection de transition avec epsilon */
+    for (int i = 0; i < test.nb_transition; i++)
+    {
+        if (strcmp(test.transition[i].alphabet, "ε") == 0 )
+        {
+            epsi_trouv = 1;
+            break;
+        }
+    }
+
     /*Affichage colonne epsilon si il y a des transitions epsilon dans l'automate sinon non*/
     if (epsi_trouv == 1)
     {
@@ -325,12 +332,11 @@ automate completion(automate test)
         {
             int trans_trouvee = 0;
 
-            /* Permet de convertir un caractère en string afin de pouvoir utilisé la fonction strcmp pour comparer*/
-            char car[2] = { alphabet[j], '\0' };
+
 
             for (int k = 0; k < res.nb_transition; k++)
             {
-                if (res.transition[k].etat_depart == i && strcmp(res.transition[k].alphabet, car) == 0)
+                if (res.transition[k].etat_depart == i && strcmp(res.transition[k].alphabet, (char[]) {alphabet[j], '\0'}) == 0)
                 {
                     trans_trouvee = 1;
                     break;
@@ -341,7 +347,7 @@ automate completion(automate test)
             if (trans_trouvee == 0 )
             {
                 res.transition[res.nb_transition].etat_depart = i;
-                strcpy(res.transition[res.nb_transition].alphabet, car);
+                strcpy(res.transition[res.nb_transition].alphabet, (char[]) {alphabet[j], '\0'});
                 res.transition[res.nb_transition].etat_arrivee = poubelle;
                 res.nb_transition++;
             }

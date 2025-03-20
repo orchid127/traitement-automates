@@ -27,14 +27,17 @@ int main()
             }
 
         }
-        if (est_un_automate_deterministe(AF)) {
-            if (est_un_automate_complet(AF)) {
+        if (est_un_automate_deterministe(AF))
+        {
+            if (est_un_automate_complet(AF))
+            {
                 AFDC = AF;
             } else {
                 AFDC = completion(AF);
             }
         }
-        affichage_automate(AFDC);
+        automate AC = completion(AF);
+        affichage_automate(AC);
         printf("Voulez vous faire un autre automate\n");
         scanf("%d",&nombre_automate);
     }
