@@ -22,7 +22,7 @@ void Stockage_donnees_automate(automate *test, int num_automate) {
 
     /*Récupère sur la troisième ligne le nombre d'état initaux de l'automate et leurs numéros*/
     fscanf(file, "%d", &test->nb_etat_initiaux);
-    printf("Le nombre d'etats initiaux est : %d\n", test->nb_etat_initiaux);
+    printf("Le nombre d'etat(s) initiaux est : %d\n", test->nb_etat_initiaux);
     printf("Les etats initiaux sont : ");
     for (int i = 0; i < test->nb_etat_initiaux; i++) {
         fscanf(file, "%d", &test->etats_initiaux[i]);
