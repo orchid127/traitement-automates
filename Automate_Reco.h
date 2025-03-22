@@ -1,3 +1,7 @@
+//
+// Created by trnto on 21/03/2025.
+//
+
 #ifndef TRAITEMENT_AUTOMATES_AUTOMATE_RECO_H
 #define TRAITEMENT_AUTOMATES_AUTOMATE_RECO_H
 
@@ -10,6 +14,7 @@
 #define MAX_TAILLE_MOT 256
 #define MAX_ETATS 100
 #define MAX_TRANSITIONS 100
+
 
 void lire_ligne(char *ligne);
 int extraire_mots(char *ligne, char mots[MAX_MOTS][MAX_TAILLE_MOT]);
