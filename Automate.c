@@ -9,10 +9,15 @@
 void Stockage_donnees_automate(automate *test, int num_automate)
 {
 
-    char filename[100];
-    /* Permet de créer le chemin du fichier contenant l'automate désirer en fonction du numéro choisis*/
-    snprintf(filename, sizeof(filename), "C:\\Users\\Kimberley\\CLionProjects\\traitement-automates\\automate-test\\Automate%d.txt", num_automate);
+    char filename[200];
+    char base_path[200];
+    strcpy(base_path, __FILE__);
+    dirname(base_path);
 
+    /* Permet de créer le chemin du fichier contenant l'automate désirer en fonction du numéro choisis*/
+    snprintf(filename, sizeof(filename), "%s/automate test/Automate%d.txt", base_path, num_automate);
+    //automate test/Automate%d.txt
+    //C:\Users\elias\CLionProjects\traitement-automates-master\automate test\Automate%d.txt
     /*Ouverture du fichier .txt choisis*/
     FILE *file = fopen(filename, "r");
 
