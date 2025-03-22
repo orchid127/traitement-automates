@@ -1,5 +1,6 @@
 #include "Automate_Reco.h"
 
+
 // Fonction pour lire une ligne de mots
 void lire_ligne(char *ligne) {
     printf("Entrez une ligne de mots : ");
@@ -81,4 +82,3 @@ void boucle_reconnaissance(automate_deterministe *A) {
         }
     }
 }
-
