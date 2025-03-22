@@ -26,6 +26,24 @@ typedef struct
     transitionst transition[100];
 }automate;
 
+typedef struct {
+    int etat_depart[100];
+    char alphabet[100];
+    int etat_arrivee[100];
+} transition_deterministe;
+
+typedef struct {
+    int nb_etat;
+    int nb_symbole;
+    int etat_initial[100];
+    int etats_terminaux[100][100];
+    int nb_etats_terminaux;
+    int nb_transition;
+    transition_deterministe transition[100];   // Les transitions du DFA
+    int etats_determines[100][100];  // Tableau pour les sous-ensembles d'états
+    int taille_subset[100];           // Taille réelle de chaque sous-ensemble
+} automate_deterministe;
+
 /**
  * @brief Fonction pour stocker les données dans un automate
  * @param automate *  : pointeur sur un automate
@@ -57,6 +75,8 @@ int est_un_automate_deterministe(automate test);
 int est_un_automate_complet(automate test);
 
 
+automate completion(automate test);
+
 /**
  * @brief Fonction pour completer l'automate
  * @param automate : structure automate
@@ -79,4 +99,20 @@ int est_standard(automate test);
  * @return  automate
  */
 automate standardisation(automate test);
+
+
+
+void determiniser(automate *non_det, automate_deterministe *det);
+
+void afficher_automate_deterministe(automate_deterministe *det);
+
+/**
+ * @brief Fonction pour complémentariser l'automate
+ * @param automate : structure automate
+ * @return  automate
+*/
+automate_deterministe automate_complementaire(automate_deterministe A);
+
+
+void copier_automate_non_deterministe_vers_deterministe(automate *non_det, automate_deterministe *det);
 #endif //AUTOMATEFINI_AUTOMATE_H

@@ -4,7 +4,10 @@
 #include <stdio.h>
 #include "Automate.h"
 #include "string.h"
-void Stockage_donnees_automate(automate *test, int num_automate) {
+#include <stdbool.h>
+
+void Stockage_donnees_automate(automate *test, int num_automate)
+{
 
     char filename[100];
     /* Permet de créer le chemin du fichier contenant l'automate désirer en fonction du numéro choisis*/
@@ -82,8 +85,6 @@ void Stockage_donnees_automate(automate *test, int num_automate) {
         }
 
         index++;
-
-
     }
 
     /* Affichage des transitions */
@@ -98,8 +99,6 @@ void Stockage_donnees_automate(automate *test, int num_automate) {
             printf("Les transitions sont %d->%s->%d\n", test->transition[i].etat_depart, test->transition[i].alphabet, test->transition[i].etat_arrivee);
         }
     }
-
-
     fclose(file);
 }
 
@@ -107,146 +106,121 @@ void Stockage_donnees_automate(automate *test, int num_automate) {
 void affichage_automate(automate test)
 {
     char alphabet[] = "abcdefghijklmnopqrstuvwxyz";
-    int init, term;
+    int larg_col = 8;
     int epsi_trouv = 0;
 
-
-    int premier_lettre = 0;
-
-    /*Affichage de l'alphabet de l'automate*/
-    for (int i = 0; i < test.nb_symbole; i++)
-    {
-        if(premier_lettre == 0)
-        {
-            printf("%10c", alphabet[i]);
-            premier_lettre =1;
-        }
-        else
-        {
-            printf("%6c", alphabet[i]);
-        }
-    }
-
-    /* Détection de transition avec epsilon */
+    /*Vérification de l'existence de transition en epsilon*/
     for (int i = 0; i < test.nb_transition; i++)
     {
-        if (strcmp(test.transition[i].alphabet, "ε") == 0 )
+        /*On compare si retourne zéro veut dire que des epsilon existe*/
+        if (strcmp(test.transition[i].alphabet, "ε") == 0)
         {
             epsi_trouv = 1;
             break;
         }
     }
 
-    /*Affichage colonne epsilon si il y a des transitions epsilon dans l'automate sinon non*/
+
+    printf("        ");
+    /*Affichage alphabet de l'automate sur une ligne grâce à un formatage spécial en c*/
+    for (int i = 0; i < test.nb_symbole; i++)
+    {
+        printf("%-*c", larg_col, alphabet[i]);
+    }
+    /*Ajout colonne epsilon si on a detecter des transition epsilon auparavant*/
     if (epsi_trouv == 1)
     {
-        printf("    epsilon");
+        printf("%-*s", larg_col, "epsilon");
     }
     printf("\n");
 
     for (int i = 0; i < test.nb_etat; i++)
     {
-        init = 0;
-        term = 0;
-        /*Vérification si l'etat étudié est un état initial*/
+        int init = 0, term = 0;
+        /*Verifie si etat observé est un état initiaux*/
         for (int j = 0; j < test.nb_etat_initiaux; j++)
         {
-            if (test.etats_initiaux[j] == i) {
+            if (test.etats_initiaux[j] == i)
+            {
                 init = 1;
-                break;
             }
         }
-        /*Vérification si l'etat étudié est un état terminal*/
+        /*Verifie si etat observé est un état final*/
         for (int j = 0; j < test.nb_etats_terminaux; j++)
         {
-            if (test.etats_terminaux[j] == i) {
+            if (test.etats_terminaux[j] == i)
+            {
                 term = 1;
-                break;
             }
         }
 
-        /*Affichage caractéristique de l'etat en cours en fonction des résultats trouvé avant*/
-        if (init && term)
+        /*En fonction des carcatéristiques déterminé avant  on affiche les caractéristiques correspondantes*/
+        if ((init && term)==1)
         {
-            printf("ES %2d", i);
+            printf("ES %-2d   ", i);
         }
         else if (init)
         {
-            printf("E  %2d", i);
+            printf("E  %-2d   ", i);
         }
         else if (term)
         {
-            printf("S  %2d", i);
+            printf("S  %-2d   ", i);
         }
         else
         {
-            printf("   %2d", i);
+            printf("   %-2d   ", i);
         }
 
-        /* Affichage des transitions */
+        /*Affichage transitions*/
+
         for (int l = 0; l < test.nb_symbole; l++)
         {
-            int trans_trouv = 0;
-            int first = 1;
+            char transitions[50] = "";
             for (int k = 0; k < test.nb_transition; k++)
             {
-                if (test.transition[k].etat_depart == i && strcmp(test.transition[k].alphabet, (char[]) {alphabet[l], '\0'}) == 0) {
-                    if (first == 1 )
-                    {
-                        printf("    ");
-                    }
-                    if (first ==0)
-                    {
-                        printf(",");
-                    }
-
-                    printf("%d", test.transition[k].etat_arrivee);
-                    trans_trouv = 1;
-                    first = 0;
+                if (test.transition[k].etat_depart == i && test.transition[k].alphabet[0] == alphabet[l])
+                {
+                    char buffer[10];
+                    sprintf(buffer, "%d,", test.transition[k].etat_arrivee);
+                    strcat(transitions, buffer);
                 }
             }
 
-            if (trans_trouv == 0)
+            if (strlen(transitions) > 0)
             {
-                printf("   -");
+                transitions[strlen(transitions) - 1] = '\0';
+                printf("%-*s", larg_col, transitions);
             }
-
-
-            if (l != test.nb_symbole - 1)
+            else
             {
-                printf("");
+                printf("%-*s", larg_col, "-");
             }
         }
 
-        /* Affichage des transitions avec epsilon */
-        if (epsi_trouv) {
-            int epsi = 0;
-            int first_epsi = 1;
+        /*Affichage transition des epsilon si on en a*/
 
+        if (epsi_trouv == 1)
+        {
+            char epsilon_trans[50] = "";
             for (int k = 0; k < test.nb_transition; k++)
             {
-
                 if (test.transition[k].etat_depart == i && strcmp(test.transition[k].alphabet, "ε") == 0)
                 {
-                    if (first_epsi ==1)
-                    {
-                        printf("    ");
-                    }
-
-                    if (first_epsi ==0)
-                    {
-                        printf(",");
-                    }
-
-                    printf("%d", test.transition[k].etat_arrivee);
-                    epsi = 1;
-                    first_epsi = 0;
+                    char buffer[10];
+                    sprintf(buffer, "%d,", test.transition[k].etat_arrivee);
+                    strcat(epsilon_trans, buffer);
                 }
             }
 
-
-            if (epsi == 0) {
-                printf("    -");
+            if (strlen(epsilon_trans) > 0)
+            {
+                epsilon_trans[strlen(epsilon_trans) - 1] = '\0';
+                printf("%-*s", larg_col, epsilon_trans);
+            }
+            else
+            {
+                printf("%-*s", larg_col, "-");
             }
         }
 
@@ -255,24 +229,23 @@ void affichage_automate(automate test)
 }
 
 
-
 int est_un_automate_deterministe(automate test)
 {
-    int nondet = 0;
+    int nondet = 1;
     int i = 0;
     int j = 0;
 
     /*Verification si le nombre d'etats initiaux supérieur à 1*/
     if (test.nb_etat_initiaux > 1 )
     {
-        nondet = 1;
+        nondet = 0;
         printf("L'automate n'est pas deterministe car il a plusieurs etats initiaux\n");
         return 0;
     }
 
     for (i = 0; i < test.nb_transition; i++)
     {
-        /* Vérification des transitions epsilon*/
+        /* Vérification existence des transitions epsilon*/
         if (strcmp(test.transition[i].alphabet, "ε") == 0)
         {
             printf("L'automate n'est pas deterministe car il y a des transitions epsilon\n");
@@ -284,20 +257,19 @@ int est_un_automate_deterministe(automate test)
         {
             if (test.transition[i].etat_depart == test.transition[j].etat_depart &&strcmp(test.transition[i].alphabet, test.transition[j].alphabet) == 0 && test.transition[i].etat_arrivee != test.transition[j].etat_arrivee)
             {
-                nondet = 1;
+                nondet = 0;
                 printf("L'automate n'est pas deterministe car l'etat %d a plusieurs transitions avec le symbole '%s' vers differents etats %d et %d \n",test.transition[i].etat_depart,test.transition[i].alphabet,test.transition[i].etat_arrivee,test.transition[j].etat_arrivee);
+                return 0;
             }
         }
     }
 
-    if (nondet == 0)
+    if (nondet == 1)
     {
         printf("L'automate est deterministe\n");
         return 1;
 
     }
-    return 1;
-
 
 }
 
@@ -341,27 +313,12 @@ automate completion(automate test)
     res = test;
     int poubelle = -1;
 
-    /* Vérification existance au moins une transition epsilon */
-    int trouv_epsi = 0;
-    for (int i = 0; i < test.nb_transition; i++)
-    {
-        if (strcmp(test.transition[i].alphabet, "ε") == 0)
-        {
-            trouv_epsi = 1;
-            break;
-        }
-    }
-
-
-/* On cherche les transitions qui n'existe pas*/
+    /* On cherche les transitions qui n'existe pas*/
     for (int i = 0; i < res.nb_etat; i++)
     {
         for (int j = 0; j < res.nb_symbole; j++)
         {
             int trans_trouvee = 0;
-
-
-
             for (int k = 0; k < res.nb_transition; k++)
             {
                 if (res.transition[k].etat_depart == i && strcmp(res.transition[k].alphabet, (char[]) {alphabet[j], '\0'}) == 0)
@@ -371,7 +328,7 @@ automate completion(automate test)
                 }
             }
 
-            /* Ajout transition vers l'état poubelle */
+            /* Si une transition eciste pas ajout transition vers l'état poubelle */
             if (trans_trouvee == 0 )
             {
                 res.transition[res.nb_transition].etat_depart = i;
@@ -380,31 +337,9 @@ automate completion(automate test)
                 res.nb_transition++;
             }
         }
-
-        /* Ajouter les transitions epsilon si l'automate en avait déjà déjà */
-        if (trouv_epsi)
-        {
-            int epsilon_trouvee = 0;
-            for (int k = 0; k < res.nb_transition; k++) {
-                if (strcmp(res.transition[k].alphabet, "ε") == 0 && res.transition[k].etat_depart == i) {
-                    epsilon_trouvee = 1;
-                    break;
-                }
-            }
-
-            if (epsilon_trouvee == 0 )
-            {
-                res.transition[res.nb_transition].etat_depart = i;
-                strcpy(res.transition[res.nb_transition].alphabet, "ε");
-                res.transition[res.nb_transition].etat_arrivee = poubelle;
-                res.nb_transition++;
-            }
-        }
     }
-
     return res;
 }
-
 
 int est_standard(automate test)
 {
@@ -416,7 +351,7 @@ int est_standard(automate test)
         printf("L'automate n'est pas standard car il possede plusieurs etats initiaux : %d \n", test.nb_etat_initiaux);
 
     }
-    /*Vérifaction qu'il n'existe pas de transition depuis d'autre état ver l'état initial*/
+    /*Vérifaction qu'il n'existe pas de transition depuis d'autre état vers l'état initial*/
     for (int i = 0; i < test.nb_transition; i++)
     {
 
@@ -512,4 +447,342 @@ automate standardisation(automate test)
     }
 
     return res;
+}
+
+
+
+/*Fonction permettant */
+int trouver_sous_ensemble(int *sous_ensemble, int nb_etats_sous_ensemble,int etats_determines[100][100], int *taille_subset, int nb_sous_ensembles)
+{
+    for (int i = 0; i < nb_sous_ensembles; i++)
+    {
+        if (taille_subset[i] != nb_etats_sous_ensemble)
+        {
+            continue;
+        }
+        bool identique = true;
+        for (int j = 0; j < nb_etats_sous_ensemble; j++)
+        {
+            if (etats_determines[i][j] != sous_ensemble[j])
+            {
+                identique = false;
+                break;
+            }
+        }
+        if (identique)
+        {
+            return i;
+        }
+
+    }
+    return -1;
+}
+ /* Fonction pour determiner si un sous esemble contient un état terminal de l'automate non déterministe */
+ /*Si il en contient 1 alors ce sous ensemble doit être terminal*/
+int est_sous_ensemble_terminaux(int *sous_ensemble, int nb_etats_sous_ensemble,int etats_terminaux[100], int nb_etats_terminaux)
+
+{
+    for (int i = 0; i < nb_etats_sous_ensemble; i++)
+    {
+        for (int j = 0; j < nb_etats_terminaux; j++)
+        {
+            /*On compare si les états dans le sous ensemble coresspond aux à un des etats terminaux de l'automae déterministe*/
+            if (sous_ensemble[i] == etats_terminaux[j])
+            {
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+
+
+void determiniser(automate *non_det, automate_deterministe *det)
+{
+    char alphabet[] = "abcdefghijklmnopqrstuvwxyz";
+    int nb_sous_ensembles = 0;
+    int queue_sous_ensembles[100];
+    int taille_file = 0;
+
+    /*Le nombre de symbole utilisé dans l'automate non déterministe est le même que dans un automate déterministe*/
+    det->nb_symbole = non_det->nb_symbole;
+
+    int sous_ensemble_initial[100];
+    int nb_etats_sous_ensemble = 0;
+
+    /*Création du sous ensemble initial*/
+    for (int i = 0; i < non_det->nb_etat_initiaux; i++)
+    {
+        sous_ensemble_initial[nb_etats_sous_ensemble++] = non_det->etats_initiaux[i];
+    }
+
+    /*Sous ensemble initial ajouté dans nouveau états créer*/
+    memcpy(det->etats_determines[nb_sous_ensembles], sous_ensemble_initial, sizeof(int) * nb_etats_sous_ensemble);
+    /*On met la taille ce sous ensemble dans notre tablea réservé à ça*/
+    det->taille_subset[nb_sous_ensembles] = nb_etats_sous_ensemble;
+    queue_sous_ensembles[taille_file++] = nb_sous_ensembles;
+    nb_sous_ensembles++;
+
+    /*Initialisation de l'automate déterministe*/
+
+    det->nb_etat = nb_sous_ensembles; /* Sera égal a un pour l'instant car on a créer que l'etat initail pour l'instant*/
+    det->etat_initial[0] = 0;  /*Le zéro correspond à l'indice ou est stocké l'etat initial dans le tableau etats_déteminé*/
+    det->nb_etats_terminaux = 0;
+    det->nb_transition = 0;
+
+    /*On détermine si l'etat initial est aussi termianl*/
+    if (est_sous_ensemble_terminaux(sous_ensemble_initial, nb_etats_sous_ensemble,non_det->etats_terminaux, non_det->nb_etats_terminaux) == 1)
+    {
+        det->etats_terminaux[det->nb_etats_terminaux][0] = 0;
+        det->nb_etats_terminaux++;
+    }
+
+    /*On va maintenant s'occuper des états auutre que l'etat initial*/
+    while (taille_file > 0)
+    {
+        int index_sous_ensemble = queue_sous_ensembles[--taille_file];
+        int *current_subset = det->etats_determines[index_sous_ensemble];
+        int taille_current = det->taille_subset[index_sous_ensemble];
+
+        /*On parcourt notre alphabet*/
+        for (int i = 0; i < non_det->nb_symbole; i++)
+        {
+            char symbole = alphabet[i];
+            int new_subset[100];
+            int nb_new_subset = 0;
+
+
+            for (int j = 0; j < taille_current; j++)
+            {
+                int etat = current_subset[j];
+                for (int k = 0; k < non_det->nb_transition; k++)
+                {
+                    if (non_det->transition[k].etat_depart == etat && non_det->transition[k].alphabet[0] == symbole)
+                    {
+                        new_subset[nb_new_subset++] = non_det->transition[k].etat_arrivee;;
+                    }
+                }
+            }
+
+            // Si des états ont été atteints pour ce symbole
+            if (nb_new_subset > 0) {
+                int found = trouver_sous_ensemble(new_subset, nb_new_subset, det->etats_determines, det->taille_subset,
+                                                  nb_sous_ensembles);
+                int destination;
+                if (found == -1) {
+                    // Nouveau sous-ensemble trouvé, l'ajouter
+                    memcpy(det->etats_determines[nb_sous_ensembles], new_subset, sizeof(int) * nb_new_subset);
+                    det->taille_subset[nb_sous_ensembles] = nb_new_subset;
+                    destination = nb_sous_ensembles;
+                    queue_sous_ensembles[taille_file++] = nb_sous_ensembles;
+                    nb_sous_ensembles++;
+
+                    // Marquer comme terminal si nécessaire
+                    if (est_sous_ensemble_terminaux(new_subset, nb_new_subset,
+                                                    non_det->etats_terminaux, non_det->nb_etats_terminaux)) {
+                        det->etats_terminaux[det->nb_etats_terminaux][0] = destination;
+                        det->nb_etats_terminaux++;
+                    }
+                } else {
+                    destination = found;
+                }
+
+                // Ajouter la transition pour ce symbole
+                det->transition[det->nb_transition].etat_depart[0] = index_sous_ensemble;  // Départ : index du sous-ensemble
+                det->transition[det->nb_transition].alphabet[0] = symbole;  // Symbole de la transition
+                det->transition[det->nb_transition].etat_arrivee[0] = destination;  // Destination
+                det->nb_transition++;
+            } else {
+                // Ajouter une transition vers l'état poubelle (si pas de transition trouvée)
+                det->transition[det->nb_transition].etat_depart[0] = index_sous_ensemble;  // Départ
+                det->transition[det->nb_transition].alphabet[0] = symbole;  // Symbole
+                det->transition[det->nb_transition].etat_arrivee[0] = -1;  // Destination (poubelle)
+                det->nb_transition++;
+            }
+        }
+    }
+
+    det->nb_etat = nb_sous_ensembles;  // Mettre à jour le nombre d'états
+    /* Affichage temporaire ;
+
+    for (int i = 0; i < det->nb_transition; i++)
+     {
+
+        printf("{");
+        int first = 1;
+        for (int j = 0; j < det->taille_subset[det->transition[i].etat_depart[0]]; j++)
+        {
+            if (first == 0)
+            {
+                printf(", ");
+            }
+            else
+            {
+                first = 0;
+            }
+            printf("%d", det->etats_determines[det->transition[i].etat_depart[0]][j]);
+        }
+        printf("} -> %c -> ", det->transition[i].alphabet[0]);
+
+
+        if (det->transition[i].etat_arrivee[0] == -1)
+        {
+            printf("-1");
+        }
+        else
+        {
+            first = 1;
+            printf("{");
+            for (int j = 0; j < det->taille_subset[det->transition[i].etat_arrivee[0]]; j++)
+            {
+                if (!first)
+                {
+                    printf(", ");
+                }
+                else
+                {
+                    first = 0;
+                }
+                printf("%d", det->etats_determines[det->transition[i].etat_arrivee[0]][j]);
+            }
+            printf("}");
+        }
+        printf("\n");*/
+    }
+
+
+
+void afficher_automate_deterministe(automate_deterministe *det)
+{
+
+    int larg_col = 15;
+
+
+    char alphabet[] = "abcdefghijklmnopqrstuvwxyz";
+    printf("%-*s", larg_col, " ");
+    for (int i = 0; i < det->nb_symbole; i++)
+    {
+        printf("%-*c", larg_col, alphabet[i]);
+    }
+    printf("\n");
+
+
+    for (int i = 0; i < det->nb_etat; i++)
+    {
+
+        if (i == det->etat_initial[0])
+        {
+            printf("%-*s", larg_col, "E");
+        } else
+        {
+            printf("%-*s", larg_col, " ");
+        }
+
+
+        int est_terminal = 0;
+        for (int k = 0; k < det->nb_etats_terminaux; k++)
+        {
+            if (det->etats_terminaux[k][0] == i)
+            {
+                est_terminal = 1;
+                break;
+            }
+        }
+
+        if (est_terminal)
+        {
+            printf("%-*s", larg_col, "S");
+        }
+        else
+        {
+            printf("%-*s", larg_col, " ");
+        }
+
+
+        for (int j = 0; j < det->taille_subset[i]; j++)
+        {
+            printf("%-*d", larg_col, det->etats_determines[i][j]);
+            if (j < det->taille_subset[i] - 1)
+            {
+                printf(", ");
+            }
+        }
+
+        printf("   ");
+
+
+        for (int j = 0; j < det->nb_symbole; j++)
+        {
+            int transition_trouvee = 0;
+
+
+            for (int t = 0; t < det->nb_transition; t++)
+            {
+                if (det->transition[t].etat_depart[0] == i && det->transition[t].alphabet[0] == alphabet[j])
+                {
+
+                    int etat_arrivee = det->transition[t].etat_arrivee[0];
+                    if (etat_arrivee == -1)
+                    {
+                        printf("%-*s", larg_col, "-1");  // Affichage de "-1" si pas de transition
+                    }
+                    else
+                    {
+
+                        for (int k = 0; k < det->taille_subset[etat_arrivee]; k++)
+                        {
+                            printf("%-*d", larg_col, det->etats_determines[etat_arrivee][k]);
+                            if (k < det->taille_subset[etat_arrivee] - 1)
+                            {
+                                printf(", ");
+                            }
+                        }
+                    }
+                    transition_trouvee = 1;
+                    break;
+                }
+            }
+
+
+            if (transition_trouvee == 0)
+            {
+                printf("%-*s", larg_col, "pas trouvé");
+            }
+        }
+        printf("\n");
+    }
+}
+
+
+automate_deterministe automate_complementaire(automate_deterministe A)
+{
+
+    int nouveaux_etats_terminaux[100] = {0};
+    int nb_nouveaux_etats_terminaux = 0;
+
+
+    for (int i = 0; i < A.nb_etat; i++) {
+        int trouve = 0;
+
+
+        for (int j = 0; j < A.nb_etats_terminaux; j++) {
+            if (A.etats_terminaux[j][0] == i) {
+                trouve = 1;  // L'état est terminal
+                break;
+            }
+        }
+
+
+        if (!trouve) {
+            nouveaux_etats_terminaux[nb_nouveaux_etats_terminaux++] = i;
+        }
+    }
+
+
+    A.nb_etats_terminaux = nb_nouveaux_etats_terminaux;
+    for (int i = 0; i < nb_nouveaux_etats_terminaux; i++) {
+        A.etats_terminaux[i][0] = nouveaux_etats_terminaux[i];
+    }
+
+    return A;
 }
