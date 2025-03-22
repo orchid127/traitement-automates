@@ -13,8 +13,9 @@
 
 void lire_ligne(char *ligne);
 int extraire_mots(char *ligne, char mots[MAX_MOTS][MAX_TAILLE_MOT]);
-int reconnaitre_mot(automate *A, char *mot);
-void boucle_reconnaissance(automate *A);
-int est_terminal(automate_deterministe *A, int etat);  
+int est_terminal(automate_deterministe *A, int etat);
+int reconnaitre_mot(automate_deterministe *A, char *mot);
+void boucle_reconnaissance(automate_deterministe *A);
+
 
 #endif //TRAITEMENT_AUTOMATES_AUTOMATE_RECO_H
