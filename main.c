@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "Automate.h"
+#include "Automate_Reco.h"
 #include "stdlib.h"
 int main()
 {
