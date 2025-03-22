@@ -6,13 +6,19 @@
 #include "string.h"
 #include <stdbool.h>
 #include "Automate_Reco.h"
+#include <libgen.h>  // Pour dirname()
 
 void Stockage_donnees_automate(automate *test, int num_automate)
 {
 
-    char filename[100];
+    char filename[200];
+    char base_path[200];
+    
+    strcpy(base_path, __FILE__);
+    dirname(base_path);
+
     /* Permet de créer le chemin du fichier contenant l'automate désirer en fonction du numéro choisis*/
-    snprintf(filename, sizeof(filename), "C:\\Users\\amabl\\CLionProjects\\Automatefini\\automate test\\Automate%d.txt", num_automate);
+    snprintf(filename, sizeof(filename), "%s/automate test/Automate%d.txt", base_path, num_automate);
 
     /*Ouverture du fichier .txt choisis*/
     FILE *file = fopen(filename, "r");
