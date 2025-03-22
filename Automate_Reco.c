@@ -29,22 +29,20 @@ int reconnaitre_mot(automate *A, char *mot) {
     while (mot[i] != '\0') {                                    // Parcours chaque caractère du mot
         int transition_trouvee = 0;  
         
-        for (int j = 0; j < A->nb_transition; j++) {            // Recherche une transition correspondant au caractère actuel
-            if (A->transition[j].etat_depart == etat_courant &&
-                strchr(A->transition[j].alphabet, mot[i]) != NULL) {
-                etat_courant = A->transition[j].etat_arrivee; 
-                transition_trouvee = 1;  
-                break;  // Sortir de la boucle dès qu'une transition est trouvée
+        for (int j = 0; j < A->nb_transition; j++) {
+            if (A->transition->etat_depart[j] == etat_courant &&
+                A->transition->alphabet[j] == mot[i]) {
+                etat_courant = A->transition->etat_arrivee[j];
+                transition_trouvee = 1;
+                break;
             }
         }
-        if (!transition_trouvee) return 0;                      // Si aucune transition ne correspond, le mot est rejeté
+
+        if (!transition_trouvee) return 0; // Mot rejeté
         i++;
     }
 
-    for (int i = 0; i < A->nb_etats_terminaux; i++) {               // Vérifie si l'état final atteint est un état terminal
-        if (etat_courant == A->etats_terminaux[i]) return 1;        // Le mot est accepté
-    }
-    return 0;                                                       // Sinon, le mot est rejeté
+    return est_terminal(A, etat_courant);  // Vérifie si on est dans un état terminal
 }
 
 // Fonction principale qui gère la reconnaissance des mots
@@ -68,4 +66,16 @@ void boucle_reconnaissance(automate *A) {
             }
         }
     }
+}
+
+// Vérifie si un état est terminal
+int est_terminal(automate_deterministe *A, int etat) {
+    for (int i = 0; i < A->nb_etats_terminaux; i++) {
+        for (int j = 0; j < A->taille_subset[i]; j++) {
+            if (A->etats_terminaux[i][j] == etat) {
+                return 1;  // L'état est terminal
+            }
+        }
+    }
+    return 0;
 }
