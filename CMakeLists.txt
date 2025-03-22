@@ -8,4 +8,6 @@ include_directories(.)
 add_executable(traitement_automates
         Automate.h
         Automate.c
-        main.c)
+        main.c
+        queue.c
+        queue.h)

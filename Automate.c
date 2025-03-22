@@ -4,11 +4,14 @@
 #include <stdio.h>
 #include "Automate.h"
 #include "string.h"
+#include "queue.h"
+#include <string.h>
+
 void Stockage_donnees_automate(automate *test, int num_automate) {
 
     char filename[100];
     /* Permet de créer le chemin du fichier contenant l'automate désirer en fonction du numéro choisis*/
-    snprintf(filename, sizeof(filename), "C:\\Users\\amabl\\CLionProjects\\Automatefini\\automate test\\Automate%d.txt", num_automate);
+    snprintf(filename, sizeof(filename), "C:\\Users\\Kimberley\\CLionProjects\\traitement-automates\\automate-test\\Automate%d.txt", num_automate);
 
     /*Ouverture du fichier .txt choisis*/
     FILE *file = fopen(filename, "r");
@@ -102,7 +105,6 @@ void Stockage_donnees_automate(automate *test, int num_automate) {
 
     fclose(file);
 }
-
 
 void affichage_automate(automate test)
 {
@@ -254,8 +256,6 @@ void affichage_automate(automate test)
     }
 }
 
-
-
 int est_un_automate_deterministe(automate test)
 {
     int nondet = 0;
@@ -405,7 +405,6 @@ automate completion(automate test)
     return res;
 }
 
-
 int est_standard(automate test)
 {
     int non_std = 0;
@@ -512,4 +511,28 @@ automate standardisation(automate test)
     }
 
     return res;
+}
+
+void determinisation(automate test){
+    automate newAutomate;
+    newAutomate.nb_etat_initiaux = 1;
+    newAutomate.etats_initiaux[0] = 13;
+
+    int *temp = test.etats_initiaux;
+
+    p_queue etatsA = createQueue();
+    p_queue etatsB = createQueue();
+
+    for (int i = 0; i < test.nb_transition; i++){
+        int curr = temp[i];
+        if (strcmp(test.transition[i].alphabet, "a") == 0 && test.transition[i].etat_depart == curr) {
+            enqueue(etatsA, test.transition[i].etat_arrivee);
+        }
+        else if (strcmp(test.transition[i].alphabet, "b") == 0 && test.transition[i].etat_depart == curr) {
+            enqueue(etatsB, test.transition[i].etat_arrivee);
+        }
+    }
+
+    displayQueue(etatsA);
+    displayQueue(etatsB);
 }

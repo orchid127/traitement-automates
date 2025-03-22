@@ -79,4 +79,13 @@ int est_standard(automate test);
  * @return  automate
  */
 automate standardisation(automate test);
+
+/**
+ * @brief Fonction pour determiniser et completer un automate
+ * @param test : structure automate
+ * @return automate
+ */
+void determinisation(automate test);
+
 #endif //AUTOMATEFINI_AUTOMATE_H
+

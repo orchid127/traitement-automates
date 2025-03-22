@@ -36,6 +36,11 @@ int main()
                 AFDC = completion(AF);
             }
         }
+        else {
+            printf("Determinisation de l'automate\n");
+            determinisation(AF);
+            printf("Fin Determinisation de l'automate\n");
+        }
         automate AC = completion(AF);
         affichage_automate(AC);
         printf("Voulez vous faire un autre automate\n");
