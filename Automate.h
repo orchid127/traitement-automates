@@ -37,11 +37,14 @@ typedef struct {
     int nb_symbole;
     int etat_initial[100];
     int etats_terminaux[100][100];
+    int nb_etat_initiaux;
     int nb_etats_terminaux;
     int nb_transition;
-    transition_deterministe transition[100];   // Les transitions du DFA
-    int etats_determines[100][100];  // Tableau pour les sous-ensembles d'états
-    int taille_subset[100];           // Taille réelle de chaque sous-ensemble
+    transition_deterministe transition[100];
+    /*Tableau ou il y a les sous ensembles (les nouveaux etats créer)*/
+    int etats_determines[100][100];
+    /* Tableau contenant la tailles des sous ensembles*/
+    int taille_subset[100];
 } automate_deterministe;
 
 /**
@@ -75,7 +78,7 @@ int est_un_automate_deterministe(automate test);
 int est_un_automate_complet(automate test);
 
 
-automate completion(automate test);
+
 
 /**
  * @brief Fonction pour completer l'automate
@@ -100,19 +103,32 @@ int est_standard(automate test);
  */
 automate standardisation(automate test);
 
-
-
+/**
+ * @brief Fonction qui permet d'effectuer la déterminisation
+ * @param *automate : structure automate
+ * @param *automate_deterministe : structure automate_deterministe
+ * @return
+ */
 void determiniser(automate *non_det, automate_deterministe *det);
 
-void afficher_automate_deterministe(automate_deterministe *det);
 
 /**
- * @brief Fonction pour complémentariser l'automate
+ * @brief Fonction qui d'afficher un automate déterministe
+ * @param *automate : structure automate
+ * @param *automate_deterministe : structure automate_deterministe
+ * @return
+ */
+void afficher_automate_deterministe(automate_deterministe *det , automate  automate_inital);
+
+/**
+ * @brief Fonction pour complémentariser l'automate et donc avoir son langague complémentaire
  * @param automate : structure automate
  * @return  automate
 */
 automate_deterministe automate_complementaire(automate_deterministe A);
 
 
-void copier_automate_non_deterministe_vers_deterministe(automate *non_det, automate_deterministe *det);
+
+
+
 #endif //AUTOMATEFINI_AUTOMATE_H
