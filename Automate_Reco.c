@@ -1,3 +1,5 @@
+#include "Automate_Reco.h"
+
 // Fonction pour lire une ligne de mots
 void lire_ligne(char *ligne) {
     printf("Entrez une ligne de mots : ");
@@ -5,7 +7,7 @@ void lire_ligne(char *ligne) {
         fprintf(stderr, "Erreur de lecture\n");
         exit(EXIT_FAILURE);
     }
-    ligne[strcspn(ligne, "\n")] = 0;
+    ligne[strcspn(ligne, "\n")] = 0; // Supprime le '\n' à la fin de la ligne
 }
 
 // Fonction pour extraire les mots d'une ligne
