@@ -18,7 +18,7 @@ void Stockage_donnees_automate(automate *test, int num_automate)
     dirname(base_path);
 
     /* Permet de créer le chemin du fichier contenant l'automate désirer en fonction du numéro choisis*/
-    snprintf(filename, sizeof(filename), "%s/automate test/Automate%d.txt", base_path, num_automate);
+    snprintf(filename, sizeof(filename), "%s/automate-test/Automate%d.txt", base_path, num_automate);
 
     /*Ouverture du fichier .txt choisis*/
     FILE *file = fopen(filename, "r");
