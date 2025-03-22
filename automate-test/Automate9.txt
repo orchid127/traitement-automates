@@ -1,13 +1,13 @@
-9 /* numéro automate*/
-2 /* nbre symbole */
-6 /* nb états*/
-1 1 /*nb états initiaux et numéro */
-2 0 1 /* nb états terminaux et numéro */
-1a2 /*transition*/
-2a3
-2b3
-3a4
-4a5
-4b5
-5a0
-0a2
+2
+6
+1 1
+2 0 1
+8
+1 a 2
+2 a 3
+2 b 3
+3 a 4
+4 a 5
+4 b 5
+5 a 0
+0 a 2
