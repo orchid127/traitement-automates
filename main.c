@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include "Automate.h"
-#include "Automate_Reco.h"
 #include "stdlib.h"
+#include "Automate_Reco.h"
+#include "Automate_Reco.c"
 int main()
 {
     int nombre_automate = 1;
@@ -27,6 +28,7 @@ int main()
 
             if (rep_standard == 1)
             {
+                printf("Voici l'automate standardisé\n");
                 SFA = standardisation(AF);
                 affichage_automate(SFA);
             }
@@ -40,38 +42,55 @@ int main()
         {
             if (est_un_automate_complet(AF)==1)
             {
-                printf("Automate Deterministe et complet : \n");
-                affichage_automate(AF);
+                /*Déterminisation ne sert a rien ici mais permet le caste en structure automate déterministe*/
+                determiniser(&AF,&AFDC);
             }
             else
             {
-                AF = completion(AF);
-                printf("Automate Deterministe et complet : \n");
-                affichage_automate(AF);
-
+                /*Déterminiser ici permet la completion et le caste en structure automate déterministe*/
+                determiniser(&AF,&AFDC);
             }
         }
         else
         {
             determiniser(&AF,&AFDC);
-            afficher_automate_deterministe(&AFDC);
-
         }
+        printf("Voici l'automate determinise et complet :\n");
+        afficher_automate_deterministe(&AFDC,AF);
 
-        /*Marche pas avec tous les automates*/
-        /*printf("Voulez vous l'automate complementaire de celui etudie precedamment : (Oui : 1) (Non : 0)");
+
+        printf("Voulez vous l'automate complementaire de celui etudie precedamment : (Oui : 1) (Non : 0)");
         scanf("%d",&choix_complementaire);
         if(choix_complementaire == 1 )
         {
             AFDCC = automate_complementaire(AFDC);
-            afficher_automate_deterministe(&AFDCC);
-        }*/
+            printf("L'automate complementaire est le suivant\n");
+            afficher_automate_deterministe(&AFDCC,AF);
+        }
 
 
+        char mots[100];
+        int res_mots;
+        lire_ligne(mots);
+        while(strcmp(mots, "Fin") != 0)
+        {
+            res_mots = reconnaitre_mot(&AFDC,mots);
+            if (res_mots == 1)
+            {
+                printf("Mots reconnu par l'automate");
+            }
+            else
+            {
+                printf("Mots non reconnu par l'automate");
+            }
+            lire_ligne(mots);
+        }
+
+
+
+        printf("\n");
         printf("Voulez vous faire un autre automate\n");
         scanf("%d",&nombre_automate);
-
-
 
     }
     printf("Sortie du programme");
