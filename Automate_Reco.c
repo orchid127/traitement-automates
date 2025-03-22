@@ -8,15 +8,15 @@ void lire_ligne(char *ligne) {
         fprintf(stderr, "Erreur de lecture\n");
         exit(EXIT_FAILURE);
     }
-    ligne[strcspn(ligne, "\n")] = 0; // Supprime le '\n' à la fin de la ligne
+    ligne[strcspn(ligne, "\n")] = 0;
 }
 
 // Fonction pour extraire les mots d'une ligne
 int extraire_mots(char *ligne, char mots[MAX_MOTS][MAX_TAILLE_MOT]) {
     int i = 0;
-    char *mot = strtok(ligne, " ");
+    char *mot = strtok(ligne, " ");          // Sépare la ligne en mots avec un espace comme délimiteur
     while (mot != NULL && i < MAX_MOTS) {
-        strcpy(mots[i], mot);
+        strcpy(mots[i], mot);                // Copie le mot extrait dans le tableau mot[]
         i++;
         mot = strtok(NULL, " ");
     }
@@ -25,8 +25,8 @@ int extraire_mots(char *ligne, char mots[MAX_MOTS][MAX_TAILLE_MOT]) {
 
 // Vérifie si un état est terminal
 int est_terminal(automate_deterministe *A, int etat) {
-    for (int i = 0; i < A->nb_etats_terminaux; i++) {
-        for (int j = 0; j < A->taille_subset[i]; j++) {
+    for (int i = 0; i < A->nb_etats_terminaux; i++) {       // Parcourt tous les états terminaux de l'automate
+        for (int j = 0; j < A->taille_subset[i]; j++) {     // Parcourt les sous-ensembles d'états terminaux
             if (A->etats_terminaux[i][j] == etat) {
                 return 1;  // L'état est terminal
             }
