@@ -67,26 +67,8 @@ int main()
             printf("L'automate complementaire est le suivant\n");
             afficher_automate_deterministe(&AFDCC,AF);
         }
-
-
-        char mots[100];
-        int res_mots;
-        lire_ligne(mots);
-        while(strcmp(mots, "Fin") != 0)
-        {
-            res_mots = reconnaitre_mot(&AFDC,mots);
-            if (res_mots == 1)
-            {
-                printf("Mots reconnu par l'automate");
-            }
-            else
-            {
-                printf("Mots non reconnu par l'automate");
-            }
-            lire_ligne(mots);
-        }
-
-
+         
+        boucle_reconnaissance(&AFDC);
 
         printf("\n");
         printf("Voulez vous faire un autre automate\n");
